@@ -2,10 +2,6 @@
 
 ms-team-timestamp.py is a Python script that calculate timestamp of student has joined meeting.
 
-```bash
-pip install foobar
-```
-
 ## Usage
 
 ```sh
