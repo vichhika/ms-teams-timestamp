@@ -43,7 +43,7 @@ def datetime_to_epoch(date,time):
 if __name__ == '__main__':
     dataset_output = []
     students = []
-    parser = argparse.ArgumentParser(description="Calculate Timestamp that student has joined meeting.")
+    parser = argparse.ArgumentParser(description="Calculate Timestamp that student has joined meeting.\nExample: python ms-team-timestamp.py -i test/meetingAttendanceList.csv -t 11:20:00:PM")
     parser.add_argument("-i", dest="filepath", required=True, help="add csv file location. For example /home/user/data.csv", metavar="CSV-FILE-PATH")
     parser.add_argument("-t", dest="endmeeting", required=True, help="add HH:MM:SS:AM/PM of the end meeting. For example 12:00:00:AM", metavar="HH:MM:SS:AM/PM")
     parser.add_argument("-o", dest="output", required=False, help="By default output file name based on date \"output-dd-mm-yyyy\"", metavar="OUTPUT-FILENAME")
