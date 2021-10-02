@@ -28,7 +28,7 @@ def is_end_meeting_valid(parser,arg):
 def extract_csv(arg):
     csv_file = open(arg,'r',encoding='utf-16')
     dataset = list(csv.reader(col.replace('\t',',') for col in csv_file))
-    header = dataset[0]
+    header = ['Full Name', 'User Action', 'Duration of participation (min)']
     del dataset[0]
     body = dataset
     return header,body
@@ -43,11 +43,12 @@ def datetime_to_epoch(date,time):
 if __name__ == '__main__':
     dataset_output = []
     students = []
-    parser = argparse.ArgumentParser(description="Calculate Timestamp that student has joined meeting.\nExample: python ms-team-timestamp.py -i test/meetingAttendanceList.csv -t 11:20:00:PM")
+    parser = argparse.ArgumentParser(description="Calculate Timestamp that student has joined meeting.")
     parser.add_argument("-i", dest="filepath", required=True, help="add csv file location. For example /home/user/data.csv", metavar="CSV-FILE-PATH")
-    parser.add_argument("-t", dest="endmeeting", required=True, help="add HH:MM:SS:AM/PM of the end meeting. For example 12:00:00:AM", metavar="HH:MM:SS:AM/PM")
+    parser.add_argument("-t", dest="endmeeting", required=True, help="add HH:MM[AM/PM] of the end meeting. For example 12:00AM", metavar="HH:MM[AM/PM]")
     parser.add_argument("-o", dest="output", required=False, help="By default output file name based on date \"output-dd-mm-yyyy\"", metavar="OUTPUT-FILENAME")
     args = parser.parse_args()
+    args.endmeeting = args.endmeeting[:-2]+":00:"+args.endmeeting[-2:]
     if is_csv(parser,args.filepath) and is_end_meeting_valid(parser,args.endmeeting):
         header,body = extract_csv(args.filepath)
         [students.append(i[0]) for i in body]
@@ -71,9 +72,9 @@ if __name__ == '__main__':
                 total_joined +=(end_time - join_time)/60
                 join_time = 0
             total_joined = int(total_joined)
-            dataset_output.append([student,"joined",str(total_joined)+" minute"])
+            dataset_output.append([student,"joined",str(total_joined)])
         dataset_output.sort()
-        output_file = args.output+".csv" if args.output else "output-"+body[0][2].replace("/","-")+".csv" 
+        output_file = args.output+".csv" if args.output else "output-"+body[0][2].replace("/","-")+"-"+str(TIME.strftime("%H%M%S",TIME.localtime()))+".csv" 
         if not os.path.exists("output"): os.mkdir("output")
         with open("output/"+output_file,'w', encoding='utf-16') as csv_file:
             w = csv.writer(csv_file)
